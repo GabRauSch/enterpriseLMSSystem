@@ -1,13 +1,17 @@
 import sequelize from "../config/mysql";
-import {DataTypes, Model} from 'sequelize'
+import { DataTypes, Model } from 'sequelize';
 
-
-interface LevelInstance  extends Model{
-    id: number,
-    limitPontuation: number
+interface LevelAttributes {
+    id: number;
+    limitPontuation: number;
 }
 
-export const Level = sequelize.define<LevelInstance>('Level', {
+class Level extends Model<LevelAttributes> implements LevelAttributes {
+    public id!: number;
+    public limitPontuation!: number;
+}
+
+Level.init({
     id: {
         type: DataTypes.INTEGER,
         unique: true,
@@ -18,6 +22,9 @@ export const Level = sequelize.define<LevelInstance>('Level', {
         type: DataTypes.INTEGER
     }
 }, {
+    sequelize,
     timestamps: false,
     tableName: 'level'
-})
+});
+
+export default Level;

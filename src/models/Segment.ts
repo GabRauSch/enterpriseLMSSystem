@@ -1,15 +1,21 @@
 import sequelize from "../config/mysql";
-import {DataTypes, Model} from 'sequelize'
+import { DataTypes, Model } from 'sequelize';
 
-
-interface SegmentInstance  extends Model{
-    id: number,
-    name: string,
-    companyId: number,
-    hasRightForCourses: boolean
+interface SegmentAttributes {
+    id: number;
+    name: string;
+    companyId: number;
+    hasRightForCourses: boolean;
 }
 
-export const Segment = sequelize.define<SegmentInstance>('Segment', {
+class Segment extends Model<SegmentAttributes> implements SegmentAttributes {
+    public id!: number;
+    public name!: string;
+    public companyId!: number;
+    public hasRightForCourses!: boolean;
+}
+
+Segment.init({
     id: {
         type: DataTypes.INTEGER,
         unique: true,
@@ -27,6 +33,9 @@ export const Segment = sequelize.define<SegmentInstance>('Segment', {
         type: DataTypes.BOOLEAN
     }
 }, {
+    sequelize,
     timestamps: false,
     tableName: 'segment'
-})
+});
+
+export default Segment;

@@ -55,6 +55,44 @@ class Company extends Model<CompanyAttributes, CompanyCreationAttributes> implem
             return null;
         }
     }
+    static async updateCompanyByCompanyId(companyId: number, data: CompanyCreationAttributes): Promise<boolean | null>{
+        try {
+            const company = Company.update(
+                {
+                    name: data.name,
+                    ownerId: data.ownerId,
+                    premiumExpiration: data.premiumExpiration,
+                    federationUnity: data.federationUnity,
+                    city: data.city,
+                    detailedLocal: data.detailedLocal,
+                    instagram: data.instagram,
+                    youtube: data.youtube,
+                    facebook: data.facebook,
+                    logo: data.logo
+                },
+                {
+                    where: {
+                        id: companyId
+                    }
+                }
+            )
+            if(!company){
+                return false
+            }
+            return true
+        } catch {
+            return false
+        }
+    }
+    static async deleteCompanyByCompanyId(companyId: number): Promise<boolean | null> {
+        try {
+            const company = await Company.findByPk(companyId);
+            company?.destroy();
+            return true
+        } catch {
+            return false
+        }
+    }
 }
 
 Company.init({
@@ -65,7 +103,8 @@ Company.init({
         autoIncrement: true
     },
     name: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        unique: true
     },
     ownerId: {
         type: DataTypes.INTEGER
