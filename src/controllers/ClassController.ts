@@ -33,7 +33,7 @@ export const createClass = async (req: Request, res: Response)=>{
     console.log(classCreation)
     
     if(!classCreation){
-        return PatternResponses.errorNotCreated(res)
+        return PatternResponses.errorNotCreated(res,  '')
     }
 
     return PatternResponses.createdWithSuccess(res);
@@ -80,7 +80,7 @@ export const deleteClass = async (req: Request, res: Response)=>{
     const classDeletion = await ClassModel.deleteClass(parseInt(classId));
 
     if(!classDeletion){
-        return PatternResponses.errorNotDeleted(res)
+        return PatternResponses.errorNotDeleted(res,  '')
     }
     return PatternResponses.deletedWithSuccess(res)
 }

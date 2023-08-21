@@ -54,7 +54,7 @@ export const createAquisition = async (req: Request, res: Response)=>{
     const aquisition = await CompanyAquisition.createAquisition(data);
 
     if(!aquisition){
-        return PatternResponses.errorNotCreated(res)
+        return PatternResponses.errorNotCreated(res, 'test')
     }
 
     return PatternResponses.createdWithSuccess(res)

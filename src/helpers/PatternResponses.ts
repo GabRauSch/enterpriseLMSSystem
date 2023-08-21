@@ -21,9 +21,12 @@ export const createdWithSuccess = (res: Response) =>{
     res.json({"Success": "Created register"})
 }
 
-export const errorNotCreated = (res: Response)=>{
+export const errorNotCreated = (res: Response, message: string)=>{
     res.status(400);
-    res.json({"Error": "Could not create register"})
+    res.json({
+        error: "Could not create register",
+        message 
+    })
 }
 
 export const changedWithSuccess = (res: Response)=>{
@@ -36,9 +39,12 @@ export const errorNotChanged = (res: Response)=>{
     res.json({"Error": "Could not change register"})
 }
 
-export const errorNotDeleted = (res: Response)=>{
+export const errorNotDeleted = (res: Response, message: string)=>{
     res.status(400);
-    res.json({"Error": "Could not delete"})
+    res.json({
+        error: "Could not delete",
+        message
+    })
 }
 
 export const deletedWithSuccess = (res: Response)=>{

@@ -1,5 +1,7 @@
 import sequelize from "../config/mysql";
 import { DataTypes, Model, Optional } from 'sequelize';
+import UserModel from "./User";
+import Course from "./Course";
 
 interface SubscriptionAttributes {
     id: number;
@@ -39,23 +41,47 @@ class Subscription extends Model<SubscriptionAttributes, SubscriptionCreationAtt
         }
     }
 
-    static async createSubscription(data: SubscriptionCreationAttributes): Promise<Subscription | null> {
+    static async createSubscription(courseId: number, userId: number): Promise<boolean | null> {
+        try {
+            const newSubscription = await Subscription.create({
+                userId, courseId
+            })
+            if(!newSubscription){
+                return false
+            }
+            return true;
+        } catch {
+            return false;
+        }
+    }
+    static async deleteSubscription(subscriptionId: number): Promise<boolean | null>{
+        try {
+            const subscriptionDeletion = await Subscription.destroy({
+                where: {
+                    id: subscriptionId
+                }
+            })
+    
+            if(!subscriptionDeletion){
+                return false
+            }
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    static async findSubscriptionByCourseAndUserId(courseId: number, userId: number): Promise<Subscription | null>{
         try {
             const subscription = await Subscription.findOne({
                 where: {
-                    userId: data.userId,
-                    courseId: data.courseId
+                    userId,
+                    courseId
                 }
             });
-
-            if (!subscription) {
-                const newSubscription = await Subscription.create(data);
-                return newSubscription;
-            }
-            return null;
-        } catch (error) {
-            console.error('Error creating subscription:', error);
-            return null;
+            return subscription
+        } catch {
+            return null
         }
     }
 }

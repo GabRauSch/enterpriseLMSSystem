@@ -36,8 +36,10 @@ router.post('/comment/like', CommentsController.createLike)
 router.delete('/comment/like/:commentId/:userId', CommentsController.deleteLike)
 
 
-router.get('/subscriptions/:userId', SubscriptionsController.getSubscriptions) // get subscriptions by user
-router.post('/subscription') // subscribes a user in a determined course {courseId, userId}
+// this is the new pattern. the following functions are gonna be replicated to the previous and following. Deleting this comment after this commit
+router.get('/subscriptions/:userId', SubscriptionsController.getSubscriptions)
+router.post('/subscription', SubscriptionsController.createSubscription)
+router.delete('/subscription/:subscriptionId', SubscriptionsController.deleteSubscription)
 
 // router.post('/auth/signup'); // User signup
 // router.post('/auth/login'); // User login

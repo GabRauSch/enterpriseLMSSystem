@@ -28,7 +28,7 @@ export const defineClassStatus = async (req: Request, res: Response)=>{
     console.log(status)
 
     if(!status){
-        return PatternResponses.errorNotCreated(res)
+        return PatternResponses.errorNotCreated(res,  '')
     }
 
     return PatternResponses.changedWithSuccess(res)

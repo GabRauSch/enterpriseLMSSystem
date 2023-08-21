@@ -36,7 +36,7 @@ export const createComment = async (req: Request, res: Response)=>{
     const newComment = await Comment.createComment(data);
 
     if(!newComment){
-        return PatternResponses.errorNotCreated(res)
+        return PatternResponses.errorNotCreated(res,  '')
     }
 
     return PatternResponses.createdWithSuccess(res)
@@ -68,7 +68,7 @@ export const deleteComment = async (req: Request, res: Response)=>{
     const commentDeletion = await Comment.deleteComment(parseInt(commentId));
 
     if(!commentDeletion){
-        return PatternResponses.errorNotDeleted(res)
+        return PatternResponses.errorNotDeleted(res,  '')
     }
 
     return PatternResponses.deletedWithSuccess(res)
@@ -98,7 +98,7 @@ export const createLike = async (req: Request, res: Response)=>{
     const likeCreation = await Like.createLike(commentId, userId);
 
     if(!likeCreation){
-        return PatternResponses.errorNotCreated(res)
+        return PatternResponses.errorNotCreated(res,  '')
     }
     return PatternResponses.createdWithSuccess(res)
 }
@@ -113,7 +113,7 @@ export const deleteLike = async (req: Request, res: Response)=>{
     const likeDeletion = await Like.deleteLikeByCommentAndUserId(parseInt(commentId), parseInt(userId));
     
     if(!likeDeletion){
-        return PatternResponses.errorNotDeleted(res);
+        return PatternResponses.errorNotDeleted(res,  '');
     }
     return PatternResponses.deletedWithSuccess(res)
 }
