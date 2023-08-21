@@ -20,7 +20,7 @@ export const createCompany = async (req: Request, res: Response)=>{
     const {name, ownerId, premiumExpiration, federationUnity, city, detailedLocal, instagram, youtube, facebook, logo} = req.body;
     if(!name || !ownerId){
         const attributes = 'name, ownerId'
-        return PatternResponses.missingAttributes(res, attributes)
+        return PatternResponses.errorMissingAttributes(res, attributes)
     }
     const data = {
         name,

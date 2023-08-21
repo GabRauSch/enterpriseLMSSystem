@@ -1,12 +1,14 @@
 import sequelize from "../config/mysql";
 import { DataTypes, Model, Optional, Op } from 'sequelize';
+import CompanyAquisition from "./CompanyAquisition";
 
 interface CommentAttributes {
     id: number;
     userId: number;
     parentClassId: number;
     parentCommentId: number;
-    content: number;
+    courseId: number;
+    content: string;
 }
 interface CommentCreationAttributes extends Optional<CommentAttributes, 'id'> {}
 
@@ -15,7 +17,8 @@ class Comment extends Model<CommentAttributes, CommentCreationAttributes> implem
     public userId!: number;
     public parentClassId!: number;
     public parentCommentId!: number;
-    public content!: number;
+    public courseId!: number;
+    public content!: string;
 
     static async getCommentsByUserAndClassId(userId: number, parentClassId: number): Promise<Comment[] | null> {
         try {
@@ -23,7 +26,8 @@ class Comment extends Model<CommentAttributes, CommentCreationAttributes> implem
                 attributes: ['userId', 'parentClassId', 'parentCommentId'],
                 where: { userId, parentClassId }
             });
-            if(!comments){
+            console.log(comments)
+            if(comments.length < 1){
                 return null
             }
             return comments;
@@ -43,16 +47,13 @@ class Comment extends Model<CommentAttributes, CommentCreationAttributes> implem
         }
     }
 
-    static async updateComment(data: CommentCreationAttributes, parentClassId?: number, parentCommentId?: number): Promise<boolean | null> {
+    static async updateComment(commentId: number, content: string ): Promise<boolean | null> {
         try {
             const comment = await Comment.update(
-                {content: data.content},
+                {content},
                 {
                     where: {
-                        [Op.or]: [
-                            {parentClassId},
-                            {parentCommentId}
-                        ]
+                        id: commentId
                     }
                 }
             )
@@ -98,6 +99,9 @@ Comment.init({
     parentCommentId: {
         type: DataTypes.INTEGER,
         defaultValue: 0
+    },
+    courseId: {
+        type: DataTypes.INTEGER
     },
     content: {
         type: DataTypes.STRING

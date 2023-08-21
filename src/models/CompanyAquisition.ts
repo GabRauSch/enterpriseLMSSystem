@@ -1,6 +1,7 @@
 import sequelize from "../config/mysql";
 import { DataTypes, Model, Optional } from 'sequelize';
 import Course from "./Course";
+import UserModel from "./User";
 
 interface CompanyAquisitionAttributes {
     id: number;
@@ -47,6 +48,7 @@ class CompanyAquisition extends Model<CompanyAquisitionAttributes, CompanyAquisi
             return null;
         }
     }
+    
 }
 
 CompanyAquisition.init({

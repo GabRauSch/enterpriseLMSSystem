@@ -6,7 +6,7 @@ export const classById = async (req: Request, res: Response)=>{
     const {classId} = req.params;
 
     if(!classId){
-        return PatternResponses.missingAttributes(res, 'classId')
+        return PatternResponses.errorMissingAttributes(res, 'classId')
     }
     const classItem = await ClassModel.findByPk(classId);
 
@@ -20,7 +20,7 @@ export const classById = async (req: Request, res: Response)=>{
 export const createClass = async (req: Request, res: Response)=>{
     const {title, videoRef, moduleId} = req.body;
     if(!title || !videoRef || !moduleId){
-        return PatternResponses.missingAttributes(res, 'title, videoRef, moduleId');
+        return PatternResponses.errorMissingAttributes(res, 'title, videoRef, moduleId');
     }
 
     const data = {
@@ -43,7 +43,7 @@ export const updateClassTitle = async (req: Request, res: Response)=>{
     const {classId, title, moduleId} = req.body
 
     if(!classId && !title){
-        return PatternResponses.missingAttributes(res, 'classId, title')
+        return PatternResponses.errorMissingAttributes(res, 'classId, title')
     }
 
     const changeTitle = await ClassModel.updateClassTitle(parseInt(classId), title)
@@ -60,7 +60,7 @@ export  const updateClassModule = async (req: Request, res: Response)=>{
     const {classId, moduleId} = req.body;
 
     if(!classId && !moduleId){
-        return PatternResponses.missingAttributes(res, 'classId, title')
+        return PatternResponses.errorMissingAttributes(res, 'classId, title')
     }
     const changeModuleId = await ClassModel.updateClassModule(parseInt(classId), moduleId)
 
@@ -74,7 +74,7 @@ export const deleteClass = async (req: Request, res: Response)=>{
     const {classId} = req.params;
 
     if(!classId){
-        return PatternResponses.missingAttributes(res, 'classId');
+        return PatternResponses.errorMissingAttributes(res, 'classId');
     }
 
     const classDeletion = await ClassModel.deleteClass(parseInt(classId));

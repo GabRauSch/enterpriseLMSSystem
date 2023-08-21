@@ -14,12 +14,25 @@ class Subscription extends Model<SubscriptionAttributes, SubscriptionCreationAtt
     public userId!: number;
     public courseId!: number;
 
-    static async getSubscriptionsByUserId(userId: number): Promise<Subscription[] | null> {
+    static async getSubscriptionsByUserId(userId: number): Promise<any | null> {
         try {
-            const subscriptions = await Subscription.findAll({
-                where: { userId }
-            });
-            return subscriptions;
+            const subscriptions = await sequelize.query(`
+            SELECT DISTINCT
+                *
+            FROM
+                course C
+            WHERE
+                C.id IN (
+                    SELECT
+                        S.courseId
+                    FROM
+                        subscription S
+                    WHERE
+                        S.userId = ${userId}
+                );`)
+
+
+            return subscriptions[0];
         } catch (error) {
             console.error('Error fetching subscriptions by user ID:', error);
             return null;

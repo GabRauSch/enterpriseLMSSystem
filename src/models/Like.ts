@@ -1,5 +1,7 @@
 import sequelize from "../config/mysql";
 import { DataTypes, Model, Optional } from 'sequelize';
+import Comment from "./Comment";
+import UserModel from "./User";
 
 interface LikeAttributes {
     id: number;
@@ -36,16 +38,71 @@ class Like extends Model<LikeAttributes, LikeCreationAttribute> implements LikeA
     }
     static async getAllLikesByCommentId(commentId: number): Promise<Like[] | null>{
         try{    
-            const likes = Like.findAll({
+            const likes = await Like.findAll({
                 where: {
                     commentId
                 }
             })
+            console.log('aaa', likes)
             return likes
         } catch{
             console.error('Error getting likes by comment Id')
             return null
         }
+    }
+    static async createLike(commentId: number, userId: number): Promise<Like | null>{
+        try {
+            const likeExists = await Like.getLikeByCommentAndUserId(commentId, userId)
+            if(likeExists){
+                return null
+            }
+            
+            const commentExists = await Comment.findByPk(commentId)
+            if(!commentExists){
+                return null
+            }
+
+            const userExists = await UserModel.findByPk(userId);
+            if(!userExists){
+                return null
+            }
+
+            const likeCreation = await Like.create({
+                commentId, userId
+            })
+
+            if(!likeCreation){
+                return null
+            }
+            return likeCreation
+
+        } catch {
+            return null
+        }
+    }
+    static async deleteLikeByCommentAndUserId(commentId: number, userId: number): Promise<boolean | null>{
+        try {
+            const like = await Like.destroy({
+                where: {
+                    commentId, userId
+                }
+            }) 
+
+            if(!like){
+                return false
+            }
+            return true
+        } catch {
+            return true
+        }
+    }
+
+    static async getLikeByCommentAndUserId(commentId: number, userId: number){
+        return await Like.findOne({
+            where: {
+                commentId, userId
+            }
+        })
     }
     
 }

@@ -11,7 +11,7 @@ export const noRegister = (res: Response)=>{
     res.json({"Error": "Couldn't find any register"})
 }
 
-export const missingAttributes = (res: Response, attributes: string)=>{
+export const errorMissingAttributes = (res: Response, attributes: string)=>{
     res.status(400)
     res.json({"Error": "Missing attributes " + attributes})
 }
@@ -23,7 +23,7 @@ export const createdWithSuccess = (res: Response) =>{
 
 export const errorNotCreated = (res: Response)=>{
     res.status(400);
-    res.json({"Error": "Could not created register"})
+    res.json({"Error": "Could not create register"})
 }
 
 export const changedWithSuccess = (res: Response)=>{
@@ -44,4 +44,13 @@ export const errorNotDeleted = (res: Response)=>{
 export const deletedWithSuccess = (res: Response)=>{
     res.status(202);
     res.json({"Success": "Deleted with success"})
+}
+
+export const updatedWithSuccess = (res: Response)=>{
+    res.status(200);
+    res.json({"Success": "Updated with success"});
+}
+export const errorNotUpdated = (res: Response)=>{
+    res.status(400);
+    res.json({"Error": "Could not update register"})
 }

@@ -3,7 +3,10 @@ import * as CompanyController from '../controllers/CompanyController';
 import * as CourseController from '../controllers/CourseController';
 import * as ClassController from '../controllers/ClassController';
 import * as QuestionsController from '../controllers/QuestionController';
-import * as StatusController from '../controllers/StatusController'
+import * as StatusController from '../controllers/StatusController';
+import * as CommentsController from '../controllers/CommentsController';
+import * as AuthController from '../controllers/AuthController';
+import * as SubscriptionsController from '../controllers/SubscriptionController'
 
 const router = Router()
 
@@ -24,24 +27,25 @@ router.put('/class/title', ClassController.updateClassTitle)
 router.put('/class/module', ClassController.updateClassModule)
 router.delete('/class/:classId', ClassController.deleteClass)
 
-router.get('/comments/:classId/:userId') // gets all comments that should appear for a user in determined class
-router.post('/comment') // creates a new comment
-router.put('/comment/:commentId') // updates a comment {data: string}
-router.delete('/comment/:commentId') // deletes a comment based in its ID
-router.get('/comment/likes') // get the number of likes in a comment
-router.put('/comment/like') // change status of a like in determined comment
+router.get('/comments/:classId/:userId', CommentsController.getComments)
+router.post('/comment', CommentsController.createComment) 
+router.put('/comment', CommentsController.updateComment)
+router.delete('/comment/:commentId', CommentsController.deleteComment)
+router.get('/comment/likes/:commentId', CommentsController.getLikes) 
+router.post('/comment/like', CommentsController.createLike)
+router.delete('/comment/like/:commentId/:userId', CommentsController.deleteLike)
 
-router.get('/user/:userId') // retrieves a user information (findByPk)
-router.put('/user/:userId/updateEmail'); // Update user profile information
-router.put('/user/:userId/changePassword'); // Change user's password
-router.put('/user/:userId/generalData') // changes user's general data like name and everything else
 
-router.get('/subscriptions/:userId') // get subscriptions by user
+router.get('/subscriptions/:userId', SubscriptionsController.getSubscriptions) // get subscriptions by user
 router.post('/subscription') // subscribes a user in a determined course {courseId, userId}
 
 // router.post('/auth/signup'); // User signup
 // router.post('/auth/login'); // User login
+// router.put('/auth/:userId/updateEmail'); // Update user profile information
 // router.post('/auth/logout'); // User logout
+// router.put('/auth/:userId/changePassword'); // Change user's password
+// router.put('/auth/:userId/generalData') // changes user's general data like name and everything else
+// router.get('/auth/:userId', AuthController.getUser) 
 // router.post('/auth/resetPassword'); // Request password reset
 // router.put('/auth/resetPassword/:resetToken'); // Reset password using reset token
 

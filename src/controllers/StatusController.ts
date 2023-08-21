@@ -7,7 +7,7 @@ export const getStatusByClass = async (req: Request, res: Response)=>{
 
     
     if (!classId || !userId) 
-        return PatternResponses.missingAttributes(res, 'classId, userId');
+        return PatternResponses.errorMissingAttributes(res, 'classId, userId');
 
     const status = await Status.getStatusByClassAndUserId(parseInt(classId), parseInt(userId))
     
@@ -21,7 +21,7 @@ export const defineClassStatus = async (req: Request, res: Response)=>{
     const {classId, userId} = req.body;
 
     if(!classId || !userId){
-        return PatternResponses.missingAttributes(res, 'classId, userId');
+        return PatternResponses.errorMissingAttributes(res, 'classId, userId');
     }
 
     const status = await Status.defineClassStatus(classId, userId);

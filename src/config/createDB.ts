@@ -21,7 +21,7 @@ export const syncAllDatabase = ()=>{
     // Module.sync();
     // Segment.sync();
     // Subscription.sync();
-    // User.sync();
+    User.sync();
     // CompanyAquisition.sync();
     Status.sync()
 }

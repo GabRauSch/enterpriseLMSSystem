@@ -26,7 +26,7 @@ class UserModel extends Model<UserAttributes, UserCreationAttributes> implements
     public position!: string;
     public departament!: string;
     public companyId!: number;
-
+    
     private async updateUserEmail(userId: number, newEmail: string): Promise<boolean | null>{
         try{
             const user = UserModel.update(

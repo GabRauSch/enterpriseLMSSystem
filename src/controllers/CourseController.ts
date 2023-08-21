@@ -22,7 +22,7 @@ export const createCourse = async (req: Request, res: Response)=>{
     const {name, ownerId, companyId, description, tagsList, pontuation, evaluation} = req.body;
     if(!name || !ownerId){
         const attributes = 'name, ownerId'
-        return PatternResponses.missingAttributes(res, attributes)
+        return PatternResponses.errorMissingAttributes(res, attributes)
     }
     const data = {
         name, ownerId, companyId, description, tagsList, pontuation, evaluation
@@ -45,7 +45,7 @@ export const createAquisition = async (req: Request, res: Response)=>{
     const {companyId, courseId} = req.body;
     if(!companyId || !courseId){
         const attributes = 'companyId, courseId'
-        return PatternResponses.missingAttributes(res, attributes)
+        return PatternResponses.errorMissingAttributes(res, attributes)
     }
     const data = {
         companyId: parseInt(companyId),
