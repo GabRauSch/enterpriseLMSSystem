@@ -22,29 +22,29 @@ class CompanyAquisition extends Model<CompanyAquisitionAttributes, CompanyAquisi
                 where: { companyId }
             });
             return aquisitions;
-        } catch (error) {
-            console.error('Error fetching aquisitions by company ID:', error);
+        } catch {
             return null;
         }
     }
 
-    static async createAquisition(data: CompanyAquisitionCreationAttributes): Promise<CompanyAquisition | null>{
+    static async getCompanyAquisitionByCompanyAndCourseId(companyId: number, courseId: number): Promise<CompanyAquisition | null>{
         try {
-            const aquisitions = await CompanyAquisition.findOne({
+            const aquisition = await CompanyAquisition.findOne({
                 where: {
-                    companyId: data.companyId,
-                    courseId: data.courseId
+                    companyId,
+                    courseId
                 }
             })  
-            const course = await Course.findByPk(data.courseId)
-
-            if(!aquisitions && course){
-                const newAquisition = await CompanyAquisition.create(data);
-                return newAquisition;
-            }
+            return aquisition
+        } catch {
             return null
-        } catch (error) {
-            console.error('Error fetching aquisitions by company ID:', error);
+        }
+    }
+    static async createAquisition(data: CompanyAquisitionCreationAttributes): Promise<CompanyAquisition | null>{
+        try {
+            const newAquisition = await CompanyAquisition.create(data);
+            return null
+        } catch {
             return null;
         }
     }

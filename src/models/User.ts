@@ -1,33 +1,98 @@
 import sequelize from "../config/mysql";
-import { DataTypes, Model, Optional } from 'sequelize';
+import { DataTypes, IncludeOptions, Model, Op, Optional } from 'sequelize';
+import { generateHash } from "../config/passport";
 
 interface UserAttributes {
     id: number;
     email: string;
     passwordHash: string;
-    token: string;
+    confirmationCode: string;
     name: string;
     pontuation: number;
     position: string;
-    departament: string;
+    department: string;
     companyId: number;
+    role: string;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+interface UserCreationAttributes {email: string, passwordHash: string, confirmationCode: string}
 interface UserGeneralData extends Exclude<UserAttributes, ['id', 'email', 'passwordHash', 'token', 'pontuation']> {}
 
 class UserModel extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
     public id!: number;
     public email!: string;
     public passwordHash!: string;
-    public token!: string;
+    public confirmationCode!: string;
     public name!: string;
     public pontuation!: number;
     public position!: string;
-    public departament!: string;
+    public department!: string;
     public companyId!: number;
+    public role!: string;
+
+    static async getUserByEmailAndPasswordHash(email: string, passwordHash: string): Promise<UserModel | null>{
+        try {
+            const user = await UserModel.findOne({
+                where: {
+                    email, passwordHash
+                }
+            })
+            if(!user){
+                return null
+            }
+            return user
+        } catch {
+            return null
+        }
+    }
+
+
+    static async getUserByEmail(email: string): Promise<UserModel | null>{
+        try {
+            const user = await UserModel.findOne({
+                where: {
+                    email
+                }
+            })
+            if(!user){
+                return null
+            }
+            return user
+        } catch {
+            return null
+        }
+    }
+
+    static async getUserByName(name: string): Promise<UserModel | null>{
+        try {
+            const user = await UserModel.findOne({
+                where: {
+                    name
+                }
+            })
+            if(!user){
+                return null
+            }
+            return user
+        } catch {
+            return null
+        }
+    }
     
-    private async updateUserEmail(userId: number, newEmail: string): Promise<boolean | null>{
+    static async createTemporaryUser(email: string, passwordHash: string, confirmationCode: string): Promise<boolean> {
+        try {
+            await UserModel.create({
+                email, 
+                passwordHash,
+                confirmationCode
+            })
+            
+            return true
+        } catch {
+            return false
+        }
+    }
+    private async updateUserEmail(userId: number, newEmail: string): Promise<boolean>{
         try{
             const user = UserModel.update(
                 {email: newEmail},
@@ -45,7 +110,7 @@ class UserModel extends Model<UserAttributes, UserCreationAttributes> implements
             return false
         }
     }
-    private async updateUserPassowrd(userId: number, newPasswordHash: string): Promise<boolean | null>{
+    private async updateUserPassowrd(userId: number, newPasswordHash: string): Promise<boolean>{
         try{
             const user = UserModel.update(
                 {passwordHash: newPasswordHash},
@@ -63,12 +128,12 @@ class UserModel extends Model<UserAttributes, UserCreationAttributes> implements
             return false
         }
     }
-    private async updateUserGeneralData(userId: number, data: UserGeneralData): Promise<boolean | null>{
+    private async updateUserGeneralData(userId: number, data: UserGeneralData): Promise<boolean>{
         try {
             const user = UserModel.update(
                 {
                     name: data.name,
-                    departament: data.departament
+                    department: data.department
                 },
                 {
                     where: {
@@ -85,7 +150,7 @@ class UserModel extends Model<UserAttributes, UserCreationAttributes> implements
         }
     }
 
-    private async getUsersByCompanyId(companyId: number): Promise<UserAttributes[] | null> {
+    private async getUsersByCompanyId(companyId: number): Promise<UserAttributes[] | boolean> {
         try {
             const users = await UserModel.findAll({
                 where: {
@@ -94,11 +159,11 @@ class UserModel extends Model<UserAttributes, UserCreationAttributes> implements
             })
             return users
         } catch {
-            return null
+            return false
         }
     }
 
-    private async deleteUserByUserId(userId: number): Promise<boolean | null>{
+    private async deleteUserByUserId(userId: number): Promise<boolean>{
         try {
             const user = await UserModel.findByPk(userId);
             user?.destroy();
@@ -124,14 +189,11 @@ UserModel.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    token: {
+    confirmationCode: {
         type: DataTypes.STRING,
-        allowNull: false
     },
     name: {
         type: DataTypes.STRING,
-        unique: true,
-        allowNull: false
     },
     pontuation: {
         type: DataTypes.INTEGER
@@ -139,11 +201,14 @@ UserModel.init({
     position: {
         type: DataTypes.STRING
     },
-    departament: {
+    department: {
         type: DataTypes.STRING
     },
     companyId: {
         type: DataTypes.INTEGER
+    },
+    role: {
+        type: DataTypes.STRING
     }
 }, {
     sequelize,

@@ -32,7 +32,6 @@ class Like extends Model<LikeAttributes, LikeCreationAttribute> implements LikeA
             await like.destroy();
             return like
         } catch (error) {
-            console.error('Error fetching status by user ID:', error);
             return null;
         }
     }
@@ -43,30 +42,13 @@ class Like extends Model<LikeAttributes, LikeCreationAttribute> implements LikeA
                     commentId
                 }
             })
-            console.log('aaa', likes)
             return likes
         } catch{
-            console.error('Error getting likes by comment Id')
             return null
         }
     }
     static async createLike(commentId: number, userId: number): Promise<Like | null>{
         try {
-            const likeExists = await Like.getLikeByCommentAndUserId(commentId, userId)
-            if(likeExists){
-                return null
-            }
-            
-            const commentExists = await Comment.findByPk(commentId)
-            if(!commentExists){
-                return null
-            }
-
-            const userExists = await UserModel.findByPk(userId);
-            if(!userExists){
-                return null
-            }
-
             const likeCreation = await Like.create({
                 commentId, userId
             })

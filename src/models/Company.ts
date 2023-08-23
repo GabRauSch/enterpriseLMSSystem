@@ -40,8 +40,6 @@ class Company extends Model<CompanyAttributes, CompanyCreationAttributes> implem
             });
             return company;
         } catch (error) {
-            // Handle the error
-            console.error('Error fetching company by ID:', error);
             return null;
         }
     }
@@ -50,8 +48,6 @@ class Company extends Model<CompanyAttributes, CompanyCreationAttributes> implem
             const company = await Company.create(data);
             return company;
         } catch (error) {
-            // Handle the error
-            console.error('Error creating company:', error);
             return null;
         }
     }

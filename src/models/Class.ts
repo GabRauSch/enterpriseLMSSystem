@@ -17,26 +17,31 @@ class ClassModel extends Model<ClassAttributes, ClassCreationAttributes> impleme
     public videoRef!: string;
     public moduleId!: number;
 
-    static async createClass(data: ClassCreationAttributes): Promise<ClassModel | null> {
+    static async getClassByTitleOrVideoRef(title: string, videoRef: string): Promise<ClassModel | null>{
         try {
-            const classItem = await ClassModel.findOne({
+            return await ClassModel.findOne({
                 where: {
                     [Op.or]: [
-                        {title: data.title},
-                        {videoRef: data.videoRef}
+                        {title},
+                        {videoRef}
                     ]
                 }
             })
-
-            if(!classItem){
-                const classDefinition = await ClassModel.create(data)
-                return classDefinition
-            }
-
+        } catch {
             return null
+        }
+    }
+
+    static async createClass(data: ClassCreationAttributes): Promise<ClassModel | null> {
+        try {
+            const classDefinition = await ClassModel.create(data)
+
+            if(!classDefinition){
+                return null
+            }
+            return classDefinition
 
         } catch (error) {
-            console.error('Error fetching status by user ID:', error);
             return null;
         }
     }
@@ -56,7 +61,6 @@ class ClassModel extends Model<ClassAttributes, ClassCreationAttributes> impleme
             }
             return true
         } catch (error) {
-            console.error('Error fetching status by user ID:', error);
             return false;
         }
     }
@@ -75,7 +79,6 @@ class ClassModel extends Model<ClassAttributes, ClassCreationAttributes> impleme
             }
             return true
         } catch (error) {
-            console.error('Error fetching status by user ID:', error);
             return false;
         }
     }
@@ -87,8 +90,7 @@ class ClassModel extends Model<ClassAttributes, ClassCreationAttributes> impleme
             }
             classItem.destroy();
             return true
-        } catch (error) {
-            console.error('Error fetching status by user ID:', error);
+        } catch {
             return false;
         }
     }

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import * as PatternResponses from '../helpers//PatternResponses'
 import Comment from '../models/Comment';
 import Like from '../models/Like';
+import UserModel from '../models/User';
 
 export const getComments = async (req: Request, res: Response)=>{
     const {classId, userId} = req.params;
@@ -51,7 +52,7 @@ export const updateComment = async (req: Request, res: Response) =>{
     const commentIsUpdated = await Comment.updateComment(commentId, content);
 
     if(!commentIsUpdated){
-        return PatternResponses.errorNotUpdated(res)
+        return PatternResponses.errorNotUpdated(res, "Error in server")
     }
 
     return PatternResponses.updatedWithSuccess(res)
@@ -95,10 +96,20 @@ export const createLike = async (req: Request, res: Response)=>{
         return PatternResponses.errorMissingAttributes(res, 'commentId, userId');
     }
 
-    const likeCreation = await Like.createLike(commentId, userId);
+    const likeExists = await Like.getLikeByCommentAndUserId(commentId, userId)
+    if(likeExists){
+        return PatternResponses.errorNotCreated(res, "Like already exists")
+    }    
+    const commentExists = await Comment.findByPk(commentId)
+    const userExists = await UserModel.findByPk(userId);
 
+    if(!commentExists || !userExists){
+        return PatternResponses.errorNotCreated(res, "Comment or User doesn't exists")
+    }
+
+    const likeCreation = await Like.createLike(commentId, userId);
     if(!likeCreation){
-        return PatternResponses.errorNotCreated(res,  '')
+        return PatternResponses.errorNotCreated(res,  'Error in server')
     }
     return PatternResponses.createdWithSuccess(res)
 }

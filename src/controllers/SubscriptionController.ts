@@ -31,13 +31,9 @@ export const createSubscription = async (req: Request, res: Response)=>{
     };
 
     const userExists = await UserModel.findByPk(userId);
-    if(!userExists){   
-        return PatternResponses.errorNotCreated(res, "User doesn't exist");
-    }
-
     const courseExists = await Course.findByPk(courseId);
-    if(!courseExists){
-        return PatternResponses.errorNotCreated(res, "Course doesn't exist");
+    if(!userExists || !courseExists){   
+        return PatternResponses.errorNotCreated(res, "User or Course doesn't exist");
     }
 
     const subscriptionCreation = await Subscription.createSubscription(parseInt(courseId), parseInt(userId));
@@ -55,12 +51,12 @@ export const deleteSubscription = async (req: Request, res: Response)=>{
         return PatternResponses.errorMissingAttributes(res, 'subscriptionId');
     }
 
-    const subscriptionExists = await Subscription.findByPk(subscriptionId);
-    if(!subscriptionExists){
+    const subscription = await Subscription.findByPk(subscriptionId);
+    if(!subscription){
         return PatternResponses.errorNotDeleted(res, "Subscription doesn't exist");
     }
 
-    const subscriptionDeletion = await Subscription.deleteSubscription(parseInt(subscriptionId));
+    const subscriptionDeletion = await Subscription.deleteSubscription(subscription);
     if(!subscriptionDeletion){
         return PatternResponses.errorNotDeleted(res, "Error during deletion")
     }

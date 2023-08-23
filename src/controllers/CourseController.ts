@@ -47,6 +47,18 @@ export const createAquisition = async (req: Request, res: Response)=>{
         const attributes = 'companyId, courseId'
         return PatternResponses.errorMissingAttributes(res, attributes)
     }
+
+
+    const aquisitionsExists = await CompanyAquisition.getCompanyAquisitionByCompanyAndCourseId(companyId, courseId)  
+    if(aquisitionsExists){
+        return PatternResponses.errorNotCreated(res, "Aquisition already exists");
+    }
+    
+    const courseExists = await Course.findByPk(courseId)
+    if(!courseExists){
+        return PatternResponses.errorNotCreated(res, "Course doesn't exist")
+    }
+
     const data = {
         companyId: parseInt(companyId),
         courseId: parseInt(courseId)

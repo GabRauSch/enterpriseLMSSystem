@@ -26,13 +26,11 @@ class Comment extends Model<CommentAttributes, CommentCreationAttributes> implem
                 attributes: ['userId', 'parentClassId', 'parentCommentId'],
                 where: { userId, parentClassId }
             });
-            console.log(comments)
             if(comments.length < 1){
                 return null
             }
             return comments;
-        } catch (error) {
-            console.error('Error fetching status by user ID:', error);
+        } catch {
             return null;
         }
     }
@@ -41,8 +39,7 @@ class Comment extends Model<CommentAttributes, CommentCreationAttributes> implem
         try {
             const classDefinition = await Comment.create(data)
             return classDefinition
-        } catch (error) {
-            console.error('Error fetching status by user ID:', error);
+        } catch {
             return null;
         }
     }
@@ -61,8 +58,7 @@ class Comment extends Model<CommentAttributes, CommentCreationAttributes> implem
                 return false
             }
             return true
-        } catch (error) {
-            console.error('Error fetching status by user ID:', error);
+        } catch {
             return false;
         }
     }
@@ -75,8 +71,7 @@ class Comment extends Model<CommentAttributes, CommentCreationAttributes> implem
                 return false
             }
             return true
-        } catch (error) {
-            console.error('Error fetching status by user ID:', error);
+        } catch {
             return false;
         }
     }

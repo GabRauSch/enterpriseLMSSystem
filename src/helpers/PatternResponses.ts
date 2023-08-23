@@ -56,7 +56,24 @@ export const updatedWithSuccess = (res: Response)=>{
     res.status(200);
     res.json({"Success": "Updated with success"});
 }
-export const errorNotUpdated = (res: Response)=>{
+export const errorNotUpdated = (res: Response, message: string)=>{
     res.status(400);
-    res.json({"Error": "Could not update register"})
+    res.json({
+        error: "Could not update register",
+        message
+    })
+}
+
+export const notAuthorized = (res: Response)=>{
+    res.status(401);
+    res.json({
+        error: "Not authorized"
+    })
+}
+
+export const errorWrongCredential = (res: Response)=>{
+    res.status(404);
+    res.json({
+        error: "Email or password doesn't match any"
+    })
 }

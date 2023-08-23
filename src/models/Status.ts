@@ -25,28 +25,27 @@ class Status extends Model<StatusAttributes, StatusCreationAttributes> implement
             return null;
         }
     }
-    static async defineClassStatus(userId: number, classId: number): Promise<Status | boolean> {
+    static async createClassStatus(userId: number, classId: number): Promise<Status | boolean> {
         try {
-            const status = await Status.findOne({
-                where: {
-                    userId, classId
+            const createdStatus = await Status.create(
+                {
+                    userId,
+                    classId
                 }
-            })
-            if(!status){
-                const createdStatus = await Status.create(
-                    {
-                        userId,
-                        classId
-                    }
-                )
-                return createdStatus
-            }
-
-            status.destroy();
-            return true
-        } catch (error) {
-            console.error('Error fetching status by user ID:', error);
+            )
+            return createdStatus
+            
+        } catch  {
             return false;
+        }
+    }
+
+    static async deleteClassStatus(status: Status): Promise<boolean>{
+        try {
+            await status.destroy();
+            return true
+        } catch {
+            return false
         }
     }
 }

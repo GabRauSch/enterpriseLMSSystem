@@ -54,17 +54,9 @@ class Subscription extends Model<SubscriptionAttributes, SubscriptionCreationAtt
             return false;
         }
     }
-    static async deleteSubscription(subscriptionId: number): Promise<boolean | null>{
+    static async deleteSubscription(subscription: Subscription): Promise<boolean | null>{
         try {
-            const subscriptionDeletion = await Subscription.destroy({
-                where: {
-                    id: subscriptionId
-                }
-            })
-    
-            if(!subscriptionDeletion){
-                return false
-            }
+            await subscription.destroy()
             return true
         } catch {
             return false

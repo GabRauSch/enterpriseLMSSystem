@@ -23,6 +23,11 @@ export const createClass = async (req: Request, res: Response)=>{
         return PatternResponses.errorMissingAttributes(res, 'title, videoRef, moduleId');
     }
 
+    const classItemExists = await ClassModel.getClassByTitleOrVideoRef(title, videoRef)
+    if(classItemExists){
+        return PatternResponses.errorNotCreated(res, "Class already exists")
+    }
+
     const data = {
         title, 
         videoRef,
@@ -30,10 +35,8 @@ export const createClass = async (req: Request, res: Response)=>{
     }
 
     const classCreation =  await ClassModel.createClass(data);
-    console.log(classCreation)
-    
     if(!classCreation){
-        return PatternResponses.errorNotCreated(res,  '')
+        return PatternResponses.errorNotCreated(res,  'Could not create class')
     }
 
     return PatternResponses.createdWithSuccess(res);
