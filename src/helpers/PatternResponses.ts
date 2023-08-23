@@ -77,3 +77,10 @@ export const errorWrongCredential = (res: Response)=>{
         error: "Email or password doesn't match any"
     })
 }
+
+export const errorEmailNotSent = (res: Response)=>{
+    res.status(400);
+    res.json({
+        error: "Email couldn't be sent"
+    })
+}

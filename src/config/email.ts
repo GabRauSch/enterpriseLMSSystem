@@ -1,6 +1,10 @@
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config()
 
 type MailData = {
+    senderName: string,
     title: string,
     content: string,
     receiver: string
@@ -9,16 +13,21 @@ type MailData = {
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'gabrielraulinoschoenell@gmail.com',
-        pass: 'ykrushfcrcvcofvc'
+        user: process.env.EMAILSENDER as string,
+        pass: process.env.EMAILPASS as string
     }
 })
 
 export const sendEmail = async (data: MailData)=>{
-    const email = await transporter.sendMail({
-        from: "Gabizinho",
-        to: "gabrielschoenell@gmail.com",
-        subject: 'Hello',
-        html: '<h1>Oi</h1>'
-    })
+    try {
+        await transporter.sendMail({
+            from: data.senderName,
+            to: data.receiver,
+            subject: data.title,
+            html: data.content
+        })
+    } catch {
+        return null
+    }
+
 }

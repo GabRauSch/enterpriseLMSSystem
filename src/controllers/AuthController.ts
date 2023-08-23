@@ -50,9 +50,10 @@ export const signup = async (req: Request, res: Response)=>{
             }
         )
         sendEmail({
-            title: 'ainda nao funciona assim',
-            content: 'bata',
-            receiver: "generosa"
+            senderName: "Confirmation email",
+            title: `Confirm signup attempt to user ${name}`,
+            content: userToken,
+            receiver: email
         })
         return res.json({
             message:  "Temporary user already exists, Token has been resent",
@@ -67,9 +68,10 @@ export const signup = async (req: Request, res: Response)=>{
     }
     
     sendEmail({
-        title: 'ainda nao funciona assim',
-        content: 'bata',
-        receiver: "generosa"
+        senderName: "Confirmation email",
+        title: `Confirm signup attempt to user ${name}`,
+        content: userToken,
+        receiver: email
     })
 
     return res.json({
